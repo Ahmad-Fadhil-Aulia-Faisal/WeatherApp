@@ -1,37 +1,40 @@
-import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import React from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
-const WeatherInfo = () => {
+const WeatherInfo = ({ weatherData }) => {
+  if (!weatherData) {
+    return null; // Tampilkan komponen kosong jika belum ada data cuaca
+  }
+
+  const { main, weather, visibility, wind } = weatherData;
+
   return (
-    <View style={styles.marginTop20}>
-      <Text style={styles.text}>The weather of Jakarta</Text>
-      <Text style={[styles.temperature, styles.marginTop20]}>15 C</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Weather in {weatherData.name}</Text>
+      <Text style={[styles.temperature, styles.marginTop20]}>{Math.round(main.temp)} °C</Text>
       <View style={[styles.rowContainer, styles.marginTop20]}>
         <Image
-          source={{ uri: 'https://openweathermap.org/img/w/04d.png' }}
+          source={{ uri: `https://openweathermap.org/img/w/${weather[0].icon}.png` }}
           style={styles.weatherIcon}
         />
-        <Text style={[styles.text, styles.bold]}>Clouds</Text>
+        <Text style={[styles.text, styles.bold]}>{weather[0].main}</Text>
       </View>
-      <Text style={styles.text}>overcast clouds</Text>
+      <Text style={styles.text}>{weather[0].description}</Text>
       <View style={[styles.rowContainer, styles.marginTop20]}>
-        <Text style={[styles.text, styles.bold]}>Visibility :</Text>
-        <Text style={[styles.text, styles.marginLeft15]}>10 km</Text>
+        <Text style={[styles.text, styles.bold]}>Visibility:</Text>
+        <Text style={[styles.text, styles.marginLeft15]}>{visibility / 1000} km</Text>
       </View>
       <View style={[styles.rowContainer, styles.marginTop20]}>
-        <Text style={[styles.text, styles.bold]}>Wind Speed :</Text>
-        <Text style={[styles.text, styles.marginLeft15]}>10 m/s</Text>
+        <Text style={[styles.text, styles.bold]}>Wind Speed:</Text>
+        <Text style={[styles.text, styles.marginLeft15]}>{wind.speed} m/s</Text>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  marginTop20: {
+  container: {
     marginTop: 20,
-  },
-  marginLeft15: {
-    marginLeft: 15,
   },
   text: {
     textAlign: 'center',
@@ -54,6 +57,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
-})
+});
 
-export default WeatherInfo
+export default WeatherInfo;
